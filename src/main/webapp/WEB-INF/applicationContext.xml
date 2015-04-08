@@ -37,7 +37,7 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="empmgmnt" />
+		<property name="persistenceUnitName" value="reindex" />
 		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -50,7 +50,7 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 	<tx:annotation-driven transaction-manager="transactionManager" />
-	<context:component-scan base-package="com.empmgmnt" />
-	<jpa:repositories base-package="com.empmgmnt.repositories" />
+	<context:component-scan base-package="br.com.reindex" />
+	
 
 </beans>
