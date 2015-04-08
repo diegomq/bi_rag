@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<h:head>
+	<title>Employee</title>
+</h:head>
+<h:body>
+	<h3>Employee - hello.xhtml</h3>
+	<h:form>
+		<h:inputText value="#{employeeBean.name}"></h:inputText>
+		<br />
+		<h:inputText value="#{employeeBean.address}"></h:inputText>
+		<br />
+		<h:inputText value="#{employeeBean.age}"></h:inputText>
+		<br />
+		<h:inputText value="#{employeeBean.salary}"></h:inputText>
+		<br />
+		<h:commandButton id="cmd" value="submit" type="submit"
+			action="#{employeeBean.saveEmployee()}" />
+	</h:form>
+</h:body>
+</html>
