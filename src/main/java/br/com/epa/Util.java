@@ -1,4 +1,4 @@
-package CriaLancamentos;
+package br.com.epa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
