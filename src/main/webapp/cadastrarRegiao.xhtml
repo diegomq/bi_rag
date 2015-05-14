@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+	
+	<ui:define name="titulo">Cadastro de Região</ui:define>
+	
+	<ui:define name="corpo">
+		<h1>Cadastro de Regiao</h1>
+		
+		<h:form id="frm">
+			<p:messages showDetail="false" showSummary="true" />
+			<p:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+				
+				<p:outputLabel for="nome" value="Nome Cidade" />
+				<p:inputText id="nome" size="80" value="#{cadastrarRegiaoBean.regiao.nomeCidade}" label="Nome Cidade" />
+				 
+				<p:outputLabel for="descricao" value="Descrição ponto" />
+				<p:inputText id="descricao" size="80" value="#{cadastrarRegiaoBean.regiao.descricaoPonto}" label="Descrição ponto" />
+				
+				<p:outputLabel/>
+				<p:commandButton ajax="false" action="#{cadastrarRegiaoBean.salvar}" value="Salvar" update="@form,:@frmListaRegioes" />
+			</p:panelGrid>
+		</h:form>
+		
+		<h:form id="frmListaRegioes">
+   			<p:growl id="msgs" showDetail="true"/>
+				<p:dataTable id="listaRegioes" value="#{cadastrarRegiaoBean.todasRegioes}" widgetVar="regiaoTable" var="regiao" rows="10" paginator="true" 
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15"
+				editable="true"
+				emptyMessage="Não foi encontrado nenhum registro!" filteredValue="#{cadastrarRegiaoBean.todasRegioesFiltradas}">
+				>
+					<f:facet name="head">
+						 <p:outputPanel>
+			                <h:outputText value="Pesquisa em todos os campos:" />
+			                <p:inputText id="globalFilter" onkeyup="PF('regiaoTable').filter()" style="width:150px" placeholder="Digite palava-chave"/>
+			            </p:outputPanel>
+					</f:facet>
+					
+					<p:ajax event="rowEdit" listener="#{cadastrarRegiaoBean.onRowEdit}" process="@this"  update=":frmListaRegioes:msgs,:frmListaRegioes:listaRegioes" />
+		       		<p:ajax event="rowEditCancel" listener="#{cadastrarRegiaoBean.onRowCancel}" process="@this"  update=":frmListaRegioes:msgs,:frmListaRegioes:listaRegioes" />
+					
+					<p:column headerText="Nome Cidade" sortBy="${regiao.nomeCidade}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{regiao.nomeCidade}"/></f:facet>
+							<f:facet name="input"><p:inputText id="inputNome" value="#{regiao.nomeCidade}"></p:inputText></f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Descrição Ponto" sortBy="${regiao.descricaoPonto}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{regiao.descricaoPonto}"/></f:facet>
+							<f:facet name="input"><p:inputText id="inputDescricao" value="#{regiao.descricaoPonto}"></p:inputText></f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					
+					<p:column style="width:32px">
+           				<p:rowEditor />
+       				</p:column>
+				</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

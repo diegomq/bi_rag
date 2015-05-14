@@ -23,7 +23,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://localhost:3306/employee</value>
+			<value>jdbc:mysql://localhost:3306/dm_venda</value>
 		</property>
 		<property name="username">
 			<value>admin</value>
@@ -37,7 +37,7 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="persistenceUnitName" value="reindex" />
+		<property name="persistenceUnitName" value="dmVenda" />
 		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+	
+	<ui:define name="titulo">Cadastro de Produto</ui:define>
+	
+	
+	<ui:define name="corpo">
+		<h1>Cadastro de Produto</h1>
+
+		
+		<h:form id="frm">
+			<p:messages showDetail="false" showSummary="true" />
+			<p:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+				
+				<p:outputLabel for="nome" value="Nome" />
+				<p:inputText id="nome" size="80" value="#{cadastrarProdutoBean.produto.nome}" label="Nome" />
+				 
+				 
+				<p:outputLabel for="money" value="Valor (R$):"/>
+	            <p:inputText id="money" value="#{cadastrarProdutoBean.produto.valor}" label="Valor">
+	                <f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" pattern="#,##0.00"/>
+	                <p:ajax update="money" process="money" event="change" />
+	            </p:inputText>
+				 
+				<p:outputLabel for="dateInicio" value="Data Início" />
+				<p:calendar id="dateInicio" value="#{cadastrarProdutoBean.produto.dateInicio}" pattern="dd/MM/yyyy HH:mm:ss" />
+				
+				<p:outputLabel for="qtdEstoqueInicial" value="Quantidade Estoque Inicial" />
+				<p:inputText id="qtdEstoqueInicial" size="8" value="#{cadastrarProdutoBean.produto.quantidadeEstoqueInicial}" label="Quantidade Estoque Inicial" />
+				
+				
+				<p:outputLabel for="estaEmLoja" value="Está em loja?" />
+		        <p:selectOneRadio id="estaEmLoja" value="#{cadastrarProdutoBean.produto.emLoja}">
+		            <f:selectItem itemLabel="Sim" itemValue="true" />
+		            <f:selectItem itemLabel="Não" itemValue="false" />
+		        </p:selectOneRadio>
+				
+				<p:outputLabel value="Tipo Produto" for="tipoProduto" />
+				<p:selectOneMenu id="tipoProduto" value="#{cadastrarProdutoBean.produto.tipoProduto}" label="Tipo Produto">
+					<f:selectItems value="#{cadastrarProdutoBean.tiposProdutos}" var="tipoProduto" itemLabel="#{tipoProduto.descricao}" itemValue="#{tipoProduto}" />
+				</p:selectOneMenu>
+				
+				<p:outputLabel/>
+				<p:commandButton ajax="false" action="#{cadastrarProdutoBean.salvar}" value="Salvar" update="@form,:@frmListaProdutos" />
+			</p:panelGrid>
+		</h:form>
+		
+		<h:outputLabel value="Para fazer adição ao estoque, edite a quantidade do estoque atual." />
+		<h:form id="frmListaProdutos">
+   			<p:growl id="msgs" showDetail="true"/>
+				<p:dataTable id="listaProdutos" value="#{cadastrarProdutoBean.todosProdutos}" widgetVar="produtoTable" var="produto" rows="30" paginator="true" 
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15,30"
+				editable="true"
+				emptyMessage="Não foi encontrado nenhum registro!" filteredValue="#{cadastrarProdutoBean.produtosFiltrados}">
+				>
+					<f:facet name="head">
+						 <p:outputPanel>
+			                <h:outputText value="Pesquisa em todos os campos:" />
+			                <p:inputText id="globalFilter" onkeyup="PF('produtoTable').filter()" style="width:150px" placeholder="Digite palava-chave"/>
+			            </p:outputPanel>
+					</f:facet>
+					
+					<p:ajax event="rowEdit" listener="#{cadastrarProdutoBean.onRowEdit}" process="@this"  update=":frmListaProdutos:msgs,:frmListaProdutos:listaProdutos" />
+		       		<p:ajax event="rowEditCancel" listener="#{cadastrarProdutoBean.onRowCancel}" process="@this"  update=":frmListaProdutos:msgs,:frmListaProdutos:listaProdutos" />
+					
+					<p:column headerText="Nome" sortBy="${produto.nome}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{produto.nome}"/></f:facet>
+							<f:facet name="input"><p:inputText id="inputNome" value="#{produto.nome}"></p:inputText></f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					
+					<p:column headerText="Valor" sortBy="${produto.valor}">
+						<p:cellEditor>
+							<f:facet name="output">
+									<h:outputText value="#{produto.valor}">
+										<f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" pattern="#,##0.00"/>
+									</h:outputText>
+							</f:facet>
+							
+							<f:facet name="input">
+								<p:inputText id="money" value="#{produto.valor}" label="Valor">
+					                <f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" pattern="#,##0.00"/>
+					                <p:ajax update="money" process="money" event="change" />
+					            </p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Tipo Produto" sortBy="${produto.tipoProduto}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{produto.tipoProduto}"/></f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu id="tipoProduto" value="#{produto.tipoProduto}" label="Tipo Produto">
+									<f:selectItems value="#{cadastrarProdutoBean.tiposProdutos}" var="tipoProduto" itemLabel="#{tipoProduto.descricao}" itemValue="#{tipoProduto}" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Qtd Estoque Inicial" sortBy="${produto.quantidadeEstoqueInicial}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{produto.quantidadeEstoqueInicial}"/></f:facet>
+							<f:facet name="input">
+								<p:inputText id="qtdEstoqueInicial" size="8" value="#{produto.quantidadeEstoqueInicial}" label="Quantidade Estoque Inicial" />		
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Qtd Estoque Atual" sortBy="${produto.quantidadeEstoqueAtual}">
+						<p:cellEditor>
+						<f:facet name="output"><h:outputText value="#{produto.quantidadeEstoqueAtual}"/></f:facet>
+						<f:facet name="input">
+							<p:inputText id="qtdEstoqueAtual" size="8" value="#{produto.quantidadeEstoqueAtual}" label="Quantidade Estoque Atual" />
+						</f:facet>
+							
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Qtd Adição Estoque" sortBy="${produto.quantidadeAdicaoEstoque}">
+						<p:cellEditor>
+							<f:facet name="output"><h:outputText value="#{produto.quantidadeAdicaoEstoque}"/></f:facet>
+							<f:facet name="input">
+								<p:inputText  size="8" value="#{produto.quantidadeAdicaoEstoque}"  />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Em Loja" sortBy="${produto.emLoja}">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{produto.emLoja}">
+									<f:converter converterId="br.com.reindex.converters.BooleanConverter"></f:converter>
+								</h:outputText>
+							</f:facet>
+							
+							<f:facet name="input">
+								 <p:selectOneRadio id="estaEmLoja" value="#{produto.emLoja}">
+						            <f:selectItem itemLabel="Sim" itemValue="true" />
+						            <f:selectItem itemLabel="Não" itemValue="false" />
+						        </p:selectOneRadio>
+					        </f:facet>
+				        </p:cellEditor>
+					</p:column>
+					
+					<p:column headerText="Data Inicio" sortBy="${produto.dateInicio}">
+						<h:outputText value="#{produto.dateInicio}">
+							<f:convertDateTime locale="pt_BR" timeZone="America/Sao_Paulo" pattern="dd/MM/yyy HH:mm:ss"></f:convertDateTime>
+						</h:outputText>
+					</p:column>
+					
+					<p:column headerText="Data Fim" sortBy="${produto.dataFim}">
+						<h:outputText value="#{produto.dataFim}">
+							<f:convertDateTime locale="pt_BR" timeZone="America/Sao_Paulo" pattern="dd/MM/yyy HH:mm:ss"></f:convertDateTime>
+						</h:outputText>
+					</p:column>
+					
+					<p:column style="width:32px">
+           				<p:rowEditor>
+	           				
+	       				</p:rowEditor>
+       				</p:column>
+				</p:dataTable>
+		</h:form>
+		
+		<h:form id="atualizarDados">
+			<p:remoteCommand autoRun="true" action="#{cadastrarProdutoBean.atualizarListaProdutos}" update=":frmListaProdutos" />
+		</h:form>
+	</ui:define>
+</ui:composition>

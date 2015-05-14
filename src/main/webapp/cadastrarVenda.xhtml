@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+	
+	<ui:define name="titulo">Cadastro de Vendas</ui:define>
+	
+	
+	<ui:define name="corpo">
+		<h1>Cadastro de Vendas</h1>
+		
+		<h:form id="atualizarDadosTela">
+			<p:remoteCommand autoRun="true" action="#{fatoBean.atualizarDados}" update=":frm,:frmListaVendas" />
+		</h:form>
+		<div id="divAll">
+			
+			<h:form id="frm">
+				<p:messages showDetail="false" showSummary="true" />
+				<p:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+					
+					<p:outputLabel for="lstProdutos" value="Lista de Produtos em Loja" />
+					<p:selectOneMenu id="lstProdutos" value="#{fatoBean.fato.id.produto}">
+						<f:selectItem itemLabel="Selecione"/>
+						<f:selectItems value="#{fatoBean.produtosDisponiveis}" var="produto" itemLabel="#{produto.nome} - Qtd disponivel: #{produto.quantidadeEstoqueAtual}" itemValue="#{produto}" />
+						<f:converter  binding="#{produtoConveter}"/>
+						<p:ajax listener="#{fatoBean.obterValorMaximoPermitido}" update="quantidade"/>
+					</p:selectOneMenu>
+					 
+					
+					<p:outputLabel for="lstRegioes" value="Lista de Regiões" />
+					<p:selectOneMenu id="lstRegioes" value="#{fatoBean.fato.id.regiao}">
+						<f:selectItems value="#{fatoBean.listaRegioes}" var="regiao" itemLabel="#{regiao.nomeCidade} - #{regiao.descricaoPonto}" itemValue="#{regiao}" />
+						<f:converter binding="#{regiaoConverter}"></f:converter>
+					</p:selectOneMenu>
+	
+					<p:outputLabel for="dataVenda" value="Data Venda" />
+					<p:calendar id="dataVenda"  value="#{fatoBean.dataVenda}" pattern="dd/MM/yyyy HH:mm:ss" />
+					
+					<p:outputLabel for="quantidade" value="Quantidade Vendida"/>
+					<p:inputText id="quantidade" value="#{fatoBean.fato.id.qtdItensVendidos}">
+						<f:validateLongRange minimum="1" maximum="#{fatoBean.quantidadeMaxima}"></f:validateLongRange>
+					</p:inputText>
+					<p:outputLabel/>
+					<p:commandButton ajax="false" action="#{fatoBean.salvar}" value="Salvar" update="@form" />
+				</p:panelGrid>
+			</h:form>
+			
+			<h:form id="frmListaVendas">
+	   			<p:growl id="msgs" showDetail="true"/>
+					<p:dataTable id="listaRegioes" value="#{fatoBean.todasVendas}" widgetVar="vendaTable" var="venda" rows="10" paginator="true" 
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="5,10,15"
+					editable="true">
+						<f:facet name="head">
+							 <p:outputPanel>
+				                <h:outputText value="Pesquisa em todos os campos:" />
+				                <p:inputText id="globalFilter" onkeyup="PF('vendaTable').filter()" style="width:150px" placeholder="Digite palava-chave"/>
+				            </p:outputPanel>
+						</f:facet>
+						
+						<p:ajax event="rowEdit" listener="#{fatoBean.onRowEdit}" process="@this"  update=":frmListaVendas:msgs,:frmListaVendas:listaRegioes" />
+			       		<p:ajax event="rowEditCancel" listener="#{fatoBean.onRowCancel}" process="@this"  update=":frmListaVendas:msgs,:frmListaVendas:listaRegioes" />
+						
+						<p:column headerText="Nome Produto" sortBy="${venda.id.produto.nome}">
+							<p:cellEditor>
+								<f:facet name="output"><h:outputText value="#{venda.id.produto.nome}"/></f:facet>
+								<f:facet name="input">
+									<p:selectOneMenu id="lstProdutos" value="#{venda.id.produto}">
+										<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+										<f:selectItems value="#{fatoBean.produtosDisponiveis}" var="produto" itemLabel="#{produto.nome} - Qtd disponivel: #{produto.quantidadeEstoqueAtual}" itemValue="#{produto}" />
+										<f:converter   binding="#{produtoConveter}"/>
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						
+						
+						<p:column headerText="Descrição Região" sortBy="${venda.id.regiao.nomeCidade}">
+							<p:cellEditor>
+								<f:facet name="output"><h:outputText value="#{venda.id.regiao.nomeCidade} - #{venda.id.regiao.descricaoPonto}"/></f:facet>
+								<f:facet name="input">
+									<p:selectOneMenu id="lstRegioes" value="#{venda.id.regiao}">
+										<f:selectItems value="#{fatoBean.listaRegioes}" var="regiao" itemLabel="#{regiao.nomeCidade} - #{regiao.descricaoPonto}" itemValue="#{regiao}" />
+										<f:converter binding="#{regiaoConverter}"></f:converter>
+									</p:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						
+						<p:column headerText="Tempo" sortBy="${venda.id.tempo.data}">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{venda.id.tempo.data}">
+										<f:convertDateTime locale="pt_BR" timeZone="America/Sao_Paulo" pattern="dd/MM/yyy HH:mm:ss"></f:convertDateTime>
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:calendar id="dataVenda" value="#{venda.id.tempo.data}" pattern="dd/MM/yyyy HH:mm:ss" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						
+						<p:column headerText="Qtd de Itens">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{venda.id.qtdItensVendidos}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="quantidade" value="#{venda.id.qtdItensVendidos}"/>
+								</f:facet>
+							</p:cellEditor>					
+						</p:column>
+						
+						<p:column headerText="Valor" sortBy="${venda.id.valorRecebido}">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{venda.id.valorRecebido}">
+										<f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" pattern="#,##0.00"/>
+									</h:outputText>
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="money" value="#{venda.id.valorRecebido}" label="Valor">
+						                <f:convertNumber type="currency" currencySymbol="R$" minFractionDigits="2" maxFractionDigits="2" pattern="#,##0.00"/>
+						                <p:ajax update="money" process="money" event="change" />
+						            </p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+	
+						<p:column style="width:32px">
+	           				<p:rowEditor />
+	       				</p:column>
+						
+					</p:dataTable>
+			</h:form>
+		</div>
+		
+	</ui:define>
+</ui:composition>

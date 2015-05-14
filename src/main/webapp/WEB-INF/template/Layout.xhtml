@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	>
+	
+	<h:head>
+		<title>
+			<ui:insert name="titulo">Sistema Financeiro Ragnarok</ui:insert>
+		</title>
+		<h:outputStylesheet library="casa" name="estilo.css" />
+	</h:head>
+	
+	<h:body>
+	
+		<p:dock  position="top">
+		    <p:menuitem value="Produto" icon="/images/produto.jpg" url="cadastrarProduto.xhtml"/>
+		    <p:menuitem value="Regiao" icon="/images/regiao.jpg" url="cadastrarRegiao.xhtml"/>
+		    <p:menuitem value="Venda" icon="/images/venda.png" url="cadastrarVenda.xhtml"/>
+		</p:dock>
+	
+		<div id="conteudo">
+			<ui:insert name="corpo" />
+		</div>
+		
+		<footer>
+			Sistema Financeiro - Ragnarok
+		</footer>
+	</h:body>
+	
+</html>

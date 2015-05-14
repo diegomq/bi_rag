@@ -35,6 +35,7 @@ import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.reindex.suri.framework.util.SearchSort;
 
@@ -97,6 +98,7 @@ public abstract class DaoSupport <T, PK extends Serializable>{
 	 * 
 	 * @param obj objeto a ser persistido
 	 */
+	@Transactional
 	public PK save(T novoObj){
 		return (PK) getSession().save(novoObj);
 	}
@@ -173,6 +175,7 @@ public abstract class DaoSupport <T, PK extends Serializable>{
 	 * 
 	 * @param obj Objeto a ser alterado na base de dados
 	 */
+	@Transactional
 	public void update(T ... objs){		
 		saveOrUpdate(objs);
 	}
@@ -183,6 +186,7 @@ public abstract class DaoSupport <T, PK extends Serializable>{
 	 * @param id Identificador do objeto a ser recuperado
 	 * @return Objeto referente ao identificador informado
 	 */
+	@Transactional
 	public T retrieve(PK id){
 		return (T)getSession().get(tipo, id);
 	}
@@ -192,6 +196,7 @@ public abstract class DaoSupport <T, PK extends Serializable>{
 	 * 
 	 * @return todos os objetos da classe
 	 */
+	@Transactional
 	public List<T> retrieveAll(){
 		return getSession().createCriteria(tipo).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 	}

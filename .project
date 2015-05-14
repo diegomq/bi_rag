@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>seguradora</name>
+	<name>vendasRag</name>
 	<comment></comment>
 	<projects>
-		<project>suri-spring</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

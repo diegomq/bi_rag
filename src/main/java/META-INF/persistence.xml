@@ -3,16 +3,22 @@
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
 						http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	<persistence-unit name="reindex" transaction-type="RESOURCE_LOCAL">
+	<persistence-unit name="dmVenda" transaction-type="RESOURCE_LOCAL">
 		<class>br.com.reindex.domain.Employee</class>
+		<class>br.com.reindex.domain.Dim_Produto</class>
+		<class>br.com.reindex.domain.Dim_Tempo</class>
+		<class>br.com.reindex.domain.Fato_Vendas</class>
+		<class>br.com.reindex.domain.FatoVendasId</class>
+		<class>br.com.reindex.domain.Dim_Regiao</class>
+		<class>br.com.reindex.domain.Tempo_BI</class>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/employee" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql28021-env-3638998.jelastic.websolute.net.br/dm_venda" />
 			<property name="javax.persistence.jdbc.user" value="admin" />
-			<property name="javax.persistence.jdbc.password" value="admin" />
+			<property name="javax.persistence.jdbc.password" value="7zRAqB9tQQ2n3GZS" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="hibernate.archive.autodetection" value="class" />
 			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.use_outer_join" value="true" />
 			<property name="hibernate.cache.use_second_level_cache"
 				value="false" />
@@ -23,3 +29,4 @@
 		</properties>
 	</persistence-unit>
 </persistence>
+
